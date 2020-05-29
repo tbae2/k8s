@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+        name: ombi-svc
+        labels:
+          name: ombi-svc
+          app: ombi
+        namespace: media
+spec:
+  selector:
+     app: ombi
+  ports:
+   - name: ombi
+     port: 80
+     targetPort: 3579

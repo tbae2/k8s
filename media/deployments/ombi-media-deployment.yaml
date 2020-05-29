@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: ombi
+        labels:
+          name: ombi
+          app: ombi
+        namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ombi
+  template:
+    metadata:
+       labels:
+         app: ombi
+    spec:
+      volumes:      
+        - name: ombicfg
+          hostPath:
+            path: /mnt/md0/containerdata/ombi
+      containers:
+        - name: ombi
+          image: linuxserver/ombi:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 3579
+          env:
+            - name: PGID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: ombicfg
+              mountPath: /config

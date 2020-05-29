@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: tdarr
+        labels:
+          name: tdarr
+          app: tdarr
+        namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tdarr
+  template:
+    metadata:
+       labels:
+         app: tdarr
+    spec:
+      volumes:      
+        - name: tdarr-data
+          persistentVolumeClaim:
+            claimName: tdarr-data
+        - name: media
+          hostPath:
+            path: /media
+        - name: transcode-cache
+          hostPath:
+            path: /mnt/tdarrcache
+        - name: time
+          hostPath:
+            path: /etc/localtime
+      containers:
+        - name: ombi
+          image: haveagitgat/tdarr_aio
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8265
+          env:
+            - name: PGID
+              value: "99"
+            - name: PUID
+              value: "100"
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: tdarr-data
+              mountPath: /home/Tdarr/Documents/Tdarr
+            - name: tdarr-data
+              mountPath: /var/lib/mongodb
+            - name: media
+              mountPath: /home/Tdarr/media
+            - name: time
+              mountPath: /etc/localtime:ro
+            - name: transcode-cache
+              mountPath: /home/Tdarr/cache
+

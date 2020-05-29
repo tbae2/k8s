@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: procurement
+        labels:
+          name: procurement-media-tv
+          app: procurement
+        namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: procurement
+  template:
+    metadata:
+       labels:
+         app: procurement
+    spec:
+      volumes:
+        - name: hydracfg
+          hostPath:
+            path: /mnt/md0/containerdata/hydra/config
+        - name: hydradownloads
+          hostPath:
+            path: /mnt/md0/containerdata/hydra/downloads
+        - name: sabcfg
+          hostPath:
+            path: /mnt/md0/media/sabnzb
+        - name: downloads
+          hostPath:
+            path: /mnt/hogwarts/downloads
+        - name: sabincomplete
+          hostPath:
+            path: /mnt/hogwarts/incomplete-downloads
+        - name: movies
+          hostPath:
+            path: /media/movies
+      containers:
+        - name: sabnzb
+          image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+          env:
+            - name: PGID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: sabcfg
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: sabincomplete
+              mountPath: /incomplete-downloads
+        - name: hydra
+          image: linuxserver/nzbhydra2
+          ports:
+          - containerPort: 5076
+          env:
+          - name: PGID
+            value: "1111"
+          - name: PUID
+            value: "1111"
+          - name: TZ
+            value: "America/New_York"
+          volumeMounts:
+            - name: hydracfg
+              mountPath: /config
+            - name: hydradownloads
+              mountPath: /downloads
+

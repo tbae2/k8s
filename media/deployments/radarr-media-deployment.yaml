@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: radarr
+        labels:
+          name: radarr-media-tv
+          app: radarr
+        namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+       labels:
+         app: radarr
+    spec:
+      volumes:      
+        - name: radarrcfg
+          hostPath:
+            path: /mnt/md0/media/radarr
+        - name: downloads
+          hostPath:
+            path: /mnt/hogwarts/downloads
+        - name: movies
+          hostPath:
+            path: /media/movies
+      containers:
+        - name: radarr
+          image: linuxserver/radarr:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 7878
+          env:
+            - name: PGID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: radarrcfg
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: movies
+              mountPath: /movies

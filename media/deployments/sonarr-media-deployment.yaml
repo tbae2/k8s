@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: sonarr
+        labels:
+          name: sonarr-media-tv
+          app: sonarr
+        namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+       labels:
+         app: sonarr
+    spec:
+      volumes:      
+        - name: sonarrcfg
+          hostPath:
+            path: /mnt/md0/media/sonarr
+        - name: downloads
+          hostPath:
+            path: /mnt/hogwarts/downloads
+        - name: tv
+          hostPath:
+            path: /media/tv
+        - name: time
+          hostPath:
+            path: /etc/localtime
+      containers:
+        - name: sonarr
+          image: linuxserver/sonarr:preview
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8989
+          env:
+            - name: PGID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: sonarrcfg
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: time
+              mountPath: /etc/localtime:ro
+            - name: tv
+              mountPath: /tv

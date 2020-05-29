@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+        name: tau-svc
+        labels:
+          name: tau-svc
+          app: tau
+        namespace: media
+spec:
+  selector:
+     app: tau
+  ports:
+   - name: tau
+     port: 80
+     targetPort: 8181

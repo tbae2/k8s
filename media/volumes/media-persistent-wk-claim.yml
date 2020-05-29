@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-wk-claim
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 79Ti
+  storageClassName: media-nfs
+  selector:
+     matchLabels:
+       usage: media-nfs-wk
+
+

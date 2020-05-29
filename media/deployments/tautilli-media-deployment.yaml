@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: tau
+        labels:
+          name: tau
+          app: tau
+        namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tau
+  template:
+    metadata:
+       labels:
+         app: tau
+    spec:
+      volumes:      
+        - name: taucfg
+          hostPath:
+            path: /mnt/md0/containerdata/tautilli
+        - name: plexlogs
+          hostPath:
+            path: /mnt/plex/config/Library/Application Support/Plex Media Server/Logs
+      containers:
+        - name: tau
+          image: tautulli/tautulli:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8181
+          env:
+            - name: PGID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: taucfg
+              mountPath: /config
+            - name: plexlogs
+              mountPath: /logs:ro

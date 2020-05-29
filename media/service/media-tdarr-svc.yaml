@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+        name: tdarr-svc
+        labels:
+          name: tdarr-media-tv
+          app: tdarr
+        namespace: media
+spec:
+  selector:
+     app: tdarr
+  ports:
+   - name: tdarr
+     port: 80
+     targetPort: 8265

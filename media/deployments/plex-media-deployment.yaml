@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: plex
+        labels:
+          name: plex-pms
+          app: plex
+        namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+       labels:
+         app: plex
+    spec:
+      volumes:      
+        - name: plexcfg
+          persistentVolumeClaim:
+            claimName: media-plex-local-claim
+        - name: plextranscode
+          persistentVolumeClaim:
+            claimName: media-plex-transcode-local-claim
+        - name: tvpd
+          persistentVolumeClaim:
+            claimName: media-tv-claim
+        - name: mvpd
+          persistentVolumeClaim:
+            claimName: media-mv-claim
+        - name: animepd
+          persistentVolumeClaim:
+            claimName: media-anime-claim
+        - name: wkpd
+          persistentVolumeClaim:
+            claimName: media-wk-claim
+      containers:
+        - name: plex
+          image: plexinc/pms-docker:plexpass
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 32400
+          - containerPort: 3005
+          - containerPort: 8324
+          - containerPort: 1900
+          - containerPort: 32410
+          - containerPort: 32412
+          - containerPort: 32413
+          - containerPort: 32414
+          env:
+            - name: TZ
+              value: "America/New_York"
+            - name: PLEX_CLAIM
+              value: "claim-sP7ZLQh9N9xGWRqyVGzP"
+            - name: ADVERTISE_IP
+              value: "http://192.168.1.246:32400/"
+          volumeMounts:
+            - name: plexcfg
+              mountPath: /config
+            - name: plextranscode
+              mountPath: /transcode
+            - name: plextranscode
+              mountPath: /tmp
+            - name: mvpd
+              mountPath: /movies
+            - name: tvpd
+              mountPath: /tv
+            - name: animepd
+              mountPath: /anime
+            - name: wkpd
+              mountPath: /workout

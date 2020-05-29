@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: procurement
+  namespace: media
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 15m
+spec:
+  rules:
+  - host: sab.featnarf.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: procurement-svc
+          servicePort: 80
+  - host: hydra.featnarf.com
+    http:
+      paths:
+      - path: /
+        backend:
+         serviceName: procurement-svc
+         servicePort: 81

@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata: 
+  name: traefik-dashboard
+  namespace: kube-system
+spec:
+  rules:
+    - host: localhost
+      http:
+        paths:
+         - path: /dashboard/
+           backend:
+             serviceName: traefik
+             servicePort: 8880
+
+

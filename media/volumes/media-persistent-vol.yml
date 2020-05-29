@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata: 
+  name: nfs-media-tv
+  labels:
+    usage: media-nfs
+  namespace: media
+spec: 
+  capacity:
+    storage: 79Ti
+  accessModes:
+    - ReadWriteMany
+  storageClassName: media-nfs
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - auto
+    - defaults
+    - nofail
+    - 0 0
+  nfs:
+    path: /mnt/user/TV
+    server: tardis10g
