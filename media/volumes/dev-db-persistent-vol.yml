@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata: 
+  name: nfs-dev-db
+  labels:
+    usage: dev-nfs-db
+spec: 
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: dev-nfs
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/user/Dev/db
+    server: tardis10g
