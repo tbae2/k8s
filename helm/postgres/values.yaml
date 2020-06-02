@@ -1,0 +1,12 @@
+global:
+  meta:
+    namespace: dev
+  postgresql:
+          postgresqlUsername: spaceadmin
+          postgresqlPassword: spacedbstuff
+persistence:
+  existingClaim: dev-db-claim
+  storageClass: dev-nfs
+service:
+     type: LoadBalancer
+

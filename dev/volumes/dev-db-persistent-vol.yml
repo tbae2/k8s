@@ -8,7 +8,7 @@ spec:
   capacity:
     storage: 100Gi
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: dev-nfs
   persistentVolumeReclaimPolicy: Retain
   nfs:
