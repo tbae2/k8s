@@ -11,6 +11,8 @@ spec:
     - ReadWriteOnce
   storageClassName: dev-nfs
   persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+          - sync
   nfs:
     path: /mnt/user/Dev/db
     server: tardis10g
